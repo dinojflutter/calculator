@@ -6,7 +6,7 @@ class CalculateProvider extends ChangeNotifier {
   String get displayText => _displayText;
 
   // Define a set of operators for easy checking
-  final Set<String> _operators = {'+', '-', '*', '/', '%', '+/-'};
+  final Set<String> _operators = {'+', '-', '*', '/', '%', '+/-', 'x'};
 
   void setValue(String value) {
     if (value == "AC") {
