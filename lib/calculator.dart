@@ -108,7 +108,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                     ),
                   ),
                 ),
-                buttontext(Colors.grey, ",", Colors.white),
+                buttontext(Colors.grey, ".", Colors.white),
                 buttontext(Colors.grey, "=", Colors.white),
               ],
             ),

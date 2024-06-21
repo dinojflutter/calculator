@@ -5,17 +5,51 @@ class CalculateProvider extends ChangeNotifier {
   String _displayText = "0";
   String get displayText => _displayText;
 
+  // Define a set of operators for easy checking
+  final Set<String> _operators = {'+', '-', '*', '/', 'x'};
+
   void setValue(String value) {
     if (value == "AC") {
       _displayText = "0";
-    } else if (displayText == "0" && value != "=") {
-      _displayText = value;
-    } else if (value == "x") {
-      _displayText += "*";
-    } else if (value == "=") {
-      calculate();
+    } else if (_displayText == "0") {
+      // Prevent the display from starting with an operator
+      if (!_operators.contains(value)) {
+        _displayText = value;
+      }
     } else {
-      _displayText += value;
+      // Prevent double operators
+      if (_operators.contains(value) &&
+          _operators.contains(_displayText[_displayText.length - 1])) {
+        // Do nothing if the last character and the current value are both operators
+        return;
+      }
+
+      switch (value) {
+        case "x":
+          // If the last character is an operator, replace it with the new operator
+          if (_operators.contains(_displayText[_displayText.length - 1])) {
+            _displayText =
+                "${_displayText.substring(0, _displayText.length - 1)}*";
+          } else {
+            _displayText += "*";
+          }
+          break;
+        case "=":
+          calculate();
+          break;
+        case "+/-":
+          toggleSign();
+          break;
+        default:
+          // If the last character is an operator, replace it with the new operator
+          if (_operators.contains(value) &&
+              _operators.contains(_displayText[_displayText.length - 1])) {
+            _displayText =
+                _displayText.substring(0, _displayText.length - 1) + value;
+          } else {
+            _displayText += value;
+          }
+      }
     }
     notifyListeners();
   }
@@ -32,16 +66,16 @@ class CalculateProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+  void toggleSign() {
+    if (_displayText.isNotEmpty &&
+        !_operators.contains(_displayText[_displayText.length - 1])) {
+      if (_displayText.startsWith('-')) {
+        _displayText = _displayText.substring(1);
+      } else {
+        _displayText = '-$_displayText';
+      }
+    }
+    notifyListeners();
+  }
 }
-
-
-    // switch (value) {
-    //     case "x":
-    //       _displayText += "*";
-    //       break;
-    //     case "=":
-    //       calculate();
-    //       break;
-    //     default:
-    //       _displayText += value;
-    //   }
